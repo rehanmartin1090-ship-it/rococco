@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rococco Rowena | Haute Couture Fabrics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@200;300;400;600&display=swap');
+
+        :root {
+            /* Adjusted to match champagne/silver tones in logo.png */
+            --gold: #CEC5BC;
+            --dark: #070809;
+            --glass: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            background-color: var(--dark);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* --- ANIMATED BACKGROUND --- */
+        .gradient-bg {
+            position: fixed;
+            inset: 0;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(206, 197, 188, 0.03) 0%, rgba(7, 8, 9, 0) 50%),
+                linear-gradient(45deg, #070809 0%, #111214 25%, #070809 50%, #111214 75%, #070809 100%);
+            background-size: 400% 400%;
+            z-index: -2;
+            /* Behind everything */
+            animation: gradientMove 30s ease infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+                opacity: 0.8;
+            }
+
+            50% {
+                background-position: 100% 50%;
+                opacity: 1;
+            }
+
+            100% {
+                background-position: 0% 50%;
+                opacity: 0.8;
+            }
+        }
+
+        /* --- PRELOADER & LOGO ANIMATION --- */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--dark);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: clip-path 1.2s cubic-bezier(0.87, 0, 0.13, 1);
+        }
+
+        .loader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 2rem;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLogo 3s ease-in-out forwards;
+        }
+
+        @keyframes drawLogo {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* Responsive adjustments for loader text */
+        .loader-logo {
+            font-family: 'Playfair Display', serif;
+            /* Scale smoothly from smaller mobile sizes */
+            font-size: clamp(0.8rem, 4vw, 2rem);
+            letter-spacing: clamp(0.1em, 0.4em, 0.6em);
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 1px solid var(--gold);
+            width: 0;
+            animation: typing 2s steps(14) 1s forwards, blink 0.7s infinite;
+            /* Ensure it doesn't overflow horizontally */
+            max-width: 90vw;
+        }
+
+        @media (max-width: 768px) {
+            .loader-logo {
+                font-size: clamp(0.8rem, 5vw, 1.5rem);
+                letter-spacing: 0.1em;
+            }
+        }
+
+        /* Aggressive fix for small mobile screens */
+        @media (max-width: 480px) {
+            .loader-logo {
+                animation: none !important;
+                /* Disable typing animation */
+                width: auto !important;
+                border-right: none !important;
+                /* Remove cursor effect */
+                white-space: normal !important;
+                /* Allow simple wrapping */
+                text-align: center;
+                font-size: 1rem !important;
+                /* Fixed readable size */
+                letter-spacing: 0.1em !important;
+                display: block;
+            }
+
+            /* Ensure the text is visible immediately since animation is removed */
+            .loader-logo {
+                opacity: 1;
+            }
+        }
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
+
+        @keyframes blink {
+            50% {
+                border-color: transparent
+            }
+        }
+
+        .loader-finish {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            animation: slideUp 1s cubic-bezier(0.87, 0, 0.13, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(-100%);
+            }
+        }
+
+        /* --- TEXT STYLES --- */
+        h1,
+        h2,
+        h3,
+        .brand-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .outline-text {
+            -webkit-text-stroke: 1px rgba(206, 197, 188, 0.4);
+            color: transparent;
+        }
+
+        .gold-text {
+            color: var(--gold);
+        }
+
+        /* --- GLASS EFFECTS --- */
+        .glass-panel {
+            background: rgba(7, 8, 9, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        /* --- HERO & BACKGROUND --- */
+        .hero-bg {
+            background-image: url('images/beyond living.png');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.5);
+            transform: scale(1.1);
+            transition: transform 10s ease-out;
+        }
+
+        .loaded .hero-bg {
+            transform: scale(1);
+        }
+
+        .btn-luxe {
+            position: relative;
+            padding: 1.25rem 3rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            background: transparent;
+            transition: all 0.5s;
+            cursor: pointer;
+        }
+
+        .btn-luxe:hover {
+            color: var(--dark);
+            background: var(--gold);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+        }
+
+        /* --- SCROLL REVEAL --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Ensure content is always visible on mobile/tablet where scroll events might be jumpy */
+        /* Ensure content is always visible on mobile/tablet where scroll events might be jumpy */
+        @media (max-width: 1024px) {
+            .reveal {
+                opacity: 1 !important;
+                transform: translateY(0) !important;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Gradient Animation -->
+    <div class="gradient-bg"></div>
+
+    <!-- Logo Animation Preloader -->
+    <div id="loader">
+        <div class="loader-content">
+            <!-- Dynamic Logo -->
+            <img src="logo.png" alt="Rococco Rowena Logo" class="logo-svg w-32 h-32 object-contain mb-8">
+            <div class="loader-logo gold-text">ROCOCCO ROWENA</div>
+            <p
+                class="text-[9px] tracking-[0.5em] md:tracking-[1.2em] uppercase opacity-40 mt-6 text-center max-w-[90vw]">
+                Excellence in Every Thread</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-panel py-5 px-6 md:px-10 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <img src="logo.png" alt="Logo" class="w-10 h-10 object-contain">
+            <div
+                class="hidden sm:block text-sm font-bold tracking-[0.5em] brand-font gold-text border-l border-white/10 pl-4">
+                ROCOCCO ROWENA
+            </div>
+        </div>
+        <div class="hidden lg:flex space-x-12 text-[9px] uppercase tracking-[0.5em] font-light">
+            <a href="about.html" class="hover:text-[#CEC5BC] transition-colors">The Heritage</a>
+            <a href="products.html" class="hover:text-[#CEC5BC] transition-colors">Collections</a>
+            <a href="lookbook.html" class="hover:text-[#CEC5BC] transition-colors">Lookbook</a>
+            <a href="verification.html" class="hover:text-[#CEC5BC] transition-colors">Verify Authenticity</a>
+        </div>
+        <div class="flex items-center space-x-6">
+            <button class="text-xs uppercase tracking-widest gold-text hidden md:block">Login</button>
+            <button class="hover:text-[#CEC5BC] text-lg hidden md:block"><i
+                    class="fa-solid fa-magnifying-glass"></i></button>
+            <button class="lg:hidden text-white text-xl z-50 relative" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-black/95 z-40 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
+        <div class="flex flex-col space-y-8 text-center">
+            <a href="index.html" class="text-2xl brand-font gold-text" onclick="toggleMobileMenu()">Home</a>
+            <a href="about.html" class="text-2xl brand-font text-white/80 hover:text-gold"
+                onclick="toggleMobileMenu()">The Heritage</a>
+            <a href="products.html" class="text-2xl brand-font text-white/80 hover:text-gold"
+                onclick="toggleMobileMenu()">Collections</a>
+            <a href="lookbook.html" class="text-2xl brand-font text-white/80 hover:text-gold"
+                onclick="toggleMobileMenu()">Lookbook</a>
+            <a href="swatch.html" class="text-2xl brand-font text-white/80 hover:text-gold"
+                onclick="toggleMobileMenu()">Request Swatch</a>
+            <a href="verification.html" class="text-2xl brand-font text-white/80 hover:text-gold"
+                onclick="toggleMobileMenu()">Verify Authenticity</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center overflow-hidden">
+        <div class="absolute inset-0 hero-bg"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#070809] via-transparent to-transparent"></div>
+
+        <div class="container mx-auto px-10 relative z-10">
+            <div class="max-w-5xl">
+                <!-- Spacer to maintain button position as the background image already contains text -->
+                <div class="h-[40vh] md:h-[50vh]"></div>
+                <div class="reveal flex flex-wrap gap-6">
+                    <button class="btn-luxe" onclick="location.href='swatch.html'">Request a Swatch</button>
+                    <button onclick="location.href='lookbook.html'"
+                        class="px-10 py-5 text-[9px] tracking-[0.5em] uppercase text-white/60 hover:text-white transition-all underline underline-offset-8">View
+                        Lookbook</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-10 reveal hidden lg:flex items-center gap-4">
+            <div class="w-12 h-[1px] bg-gold"></div>
+            <span class="text-[9px] tracking-[0.5em] uppercase text-gray-500">Scroll to explore heritage</span>
+        </div>
+    </section>
+
+    <!-- Featured Material -->
+    <!-- Featured Material -->
+    <section class="py-20 md:py-40 bg-[#070809]">
+        <div class="container mx-auto px-10">
+            <div class="grid grid-cols-12 gap-0 md:gap-20">
+                <div class="col-span-12 lg:col-span-5 reveal">
+                    <div class="md:sticky md:top-32">
+                        <span class="gold-text text-xs tracking-[0.6em] uppercase mb-6 block">Legacy Selection</span>
+                        <h2 class="text-5xl md:text-6xl mb-10 leading-tight">Super 200s <br><span
+                                class="italic font-light">Merino Wool</span></h2>
+                        <p class="text-gray-400 font-light text-lg mb-10 leading-relaxed">
+                            A fabric so light it defies gravity, yet so resilient it maintains its shape through years
+                            of wear. The cornerstone of the Rococco Rowena signature suit.
+                        </p>
+                        <div class="glass-card p-10 border-gold/20">
+                            <div class="flex justify-between items-center mb-6">
+                                <span class="text-[10px] tracking-widest text-gray-500 uppercase">Weight</span>
+                                <span class="text-sm font-light">240g / Meter</span>
+                            </div>
+                            <div class="flex justify-between items-center mb-6">
+                                <span class="text-[10px] tracking-widest text-gray-500 uppercase">Origin</span>
+                                <span class="text-sm font-light">Trivero, Italy</span>
+                            </div>
+                            <button
+                                class="w-full py-4 text-[10px] tracking-[0.3em] uppercase gold-text border border-gold/30 hover:bg-gold hover:text-dark transition-all">Technical
+                                Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-12 lg:col-span-7 mt-20 lg:mt-0 space-y-20">
+                    <div class="relative reveal group">
+                        <div class="aspect-[4/5] overflow-hidden">
+                            <img src="images/fabric.png"
+                                class="w-full h-full object-cover transition-transform duration-[4s] group-hover:scale-110">
+                        </div>
+                        <div class="absolute -bottom-10 -left-10 glass-panel p-8 hidden md:block">
+                            <p class="text-2xl italic">Deep Navy Twill</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Art of Weaving (Philosophy) -->
+    <section class="py-20 md:py-40 relative">
+        <div class="container mx-auto px-6 md:px-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+                <div class="order-2 md:order-1 reveal">
+                    <img src="images/suit.png" alt="Bespoke Suit"
+                        class="w-full h-auto object-cover grayscale hover:grayscale-0 transition-all duration-700">
+                </div>
+                <div class="order-1 md:order-2 reveal">
+                    <span class="gold-text text-xs tracking-[0.4em] uppercase mb-6 block">Our Philosophy</span>
+                    <h2 class="text-4xl md:text-5xl mb-8 leading-tight">The Art of <br><span
+                            class="italic font-light">Weaving</span></h2>
+                    <p class="text-gray-400 font-light text-lg mb-8 leading-relaxed">
+                        True luxury is not just seen; it is felt. Our master weavers blend ageless tradition with modern
+                        innovation to create fabrics that breathe, move, and endure.
+                    </p>
+                    <button
+                        class="text-xs uppercase tracking-widest gold-text border-b border-gold pb-2 hover:text-white transition-colors">Read
+                        Our Story</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Curated Collections (Grid) -->
+    <section class="py-20 md:py-40 bg-[#0c0d0f]">
+        <div class="container mx-auto px-6 md:px-10">
+            <div class="text-center mb-16 md:mb-24 reveal">
+                <span class="gold-text text-xs tracking-[0.4em] uppercase mb-4 block">Seasonal Edit</span>
+                <h2 class="text-3xl md:text-5xl">Curated Collections</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Collection 1 -->
+                <div class="group cursor-pointer reveal">
+                    <div class="overflow-hidden mb-6 relative">
+                        <img src="images/fabric4.png" alt="Suiting"
+                            class="w-full aspect-[3/4] object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                    </div>
+                    <h3 class="text-lg tracking-[0.2em] uppercase mb-2">Signature Suiting</h3>
+                    <p class="text-xs text-gray-500 tracking-widest uppercase">Super 150s & Above</p>
+                </div>
+
+                <!-- Collection 2 -->
+                <div class="group cursor-pointer reveal" style="transition-delay: 100ms;">
+                    <div class="overflow-hidden mb-6 relative">
+                        <img src="images/fabric5.png" alt="Shirting"
+                            class="w-full aspect-[3/4] object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                    </div>
+                    <h3 class="text-lg tracking-[0.2em] uppercase mb-2">Luxury Shirting</h3>
+                    <p class="text-xs text-gray-500 tracking-widest uppercase">Egyptian Cotton</p>
+                </div>
+
+                <!-- Collection 3 -->
+                <div class="group cursor-pointer reveal" style="transition-delay: 200ms;">
+                    <div class="overflow-hidden mb-6 relative">
+                        <img src="images/fabric3.png" alt="Ceremonial"
+                            class="w-full aspect-[3/4] object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                    </div>
+                    <h3 class="text-lg tracking-[0.2em] uppercase mb-2">Ceremonial</h3>
+                    <p class="text-xs text-gray-500 tracking-widest uppercase">Velvet & Silk</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-16 reveal">
+                <button class="btn-luxe">View All Collections</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bespoke Services -->
+    <section class="py-20 md:py-40 relative border-t border-white/5">
+        <div class="container mx-auto px-6 md:px-10">
+            <div
+                class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-white/10">
+                <div class="px-4 py-8 md:py-0 reveal">
+                    <i class="fa-solid fa-ruler-combined text-2xl gold-text mb-6"></i>
+                    <h4 class="text-sm tracking-[0.3em] uppercase mb-4">Made to Measure</h4>
+                    <p class="text-gray-500 text-sm leading-7 max-w-xs mx-auto">Precision tailoring coordinated with our
+                        global network of master tailors.</p>
+                </div>
+                <div class="px-4 py-8 md:py-0 reveal" style="transition-delay: 100ms;">
+                    <i class="fa-solid fa-globe text-2xl gold-text mb-6"></i>
+                    <h4 class="text-sm tracking-[0.3em] uppercase mb-4">Global Concierge</h4>
+                    <p class="text-gray-500 text-sm leading-7 max-w-xs mx-auto">Doorstep delivery capabilities to over
+                        40 countries worldwide.</p>
+                </div>
+                <div class="px-4 py-8 md:py-0 reveal" style="transition-delay: 200ms;">
+                    <i class="fa-solid fa-gem text-2xl gold-text mb-6"></i>
+                    <h4 class="text-sm tracking-[0.3em] uppercase mb-4">Rare Materials</h4>
+                    <p class="text-gray-500 text-sm leading-7 max-w-xs mx-auto">Access to limited edition runs of
+                        Vicuña, Cashmere, and Silk blends.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-60 relative overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-[#070809]"></div>
+        <div class="container mx-auto px-10 relative z-10 text-center">
+            <img src="logo.png" alt="Logo" class="mx-auto mb-12 opacity-40 w-20 h-20 object-contain">
+            <h2 class="text-5xl md:text-7xl mb-12 reveal">The World's Finest <br> <span class="italic font-light">At
+                    Your Fingertips.</span></h2>
+            <div class="reveal">
+                <button class="btn-luxe">Become a Member</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black py-20 px-10 border-t border-white/5">
+        <div
+            class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-20 text-[10px] tracking-[0.4em] text-gray-500 uppercase font-light">
+            <div>
+                <a href="about.html" class="gold-text mb-8 block hover:underline">Rococco Rowena</a>
+                <p class="leading-loose">Crafting the standard of luxury <br> textiles since the golden age of
+                    tailoring.</p>
+            </div>
+            <div class="flex flex-col space-y-4">
+                <a href="verification.html" class="hover:text-gold transition-colors">Registry Verification</a>
+                <a href="#" class="hover:text-gold transition-colors">Tailor Network</a>
+                <a href="#" class="hover:text-gold transition-colors">Press & Media</a>
+            </div>
+            <div class="text-right">
+                <p class="mb-8">Privacy / Terms</p>
+                <p>© 2025 All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btnIcon = document.querySelector('.fa-bars, .fa-times');
+
+            if (menu.classList.contains('opacity-0')) {
+                menu.classList.remove('opacity-0', 'pointer-events-none');
+                btnIcon.classList.remove('fa-bars');
+                btnIcon.classList.add('fa-times');
+            } else {
+                menu.classList.add('opacity-0', 'pointer-events-none');
+                btnIcon.classList.remove('fa-times');
+                btnIcon.classList.add('fa-bars');
+            }
+        }
+
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+
+            // Allow logo animation to finish
+            setTimeout(() => {
+                loader.classList.add('loader-finish');
+                document.body.classList.add('loaded');
+
+                // Initial check for reveals
+                setTimeout(handleScroll, 500);
+            }, 3500);
+        });
+
+        function handleScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveal.getBoundingClientRect().top;
+                const revealPoint = 100;
+
+                if (revealTop < windowHeight - revealPoint) {
+                    reveal.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+    </script>
+</body>
+
+</html>
